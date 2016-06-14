@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+
+{{ super() }}
+Hello, 
+{% if current_user.is_authenticated %}
+	{{ current_user.username }}
+You must confirm your email, please click 
+<a href="{{url_for('auth.resend_confirmation')}}">here</a>
+
+{% else %}
+	Stranger
+{% endif %}
+
+
+{% endblock %}
