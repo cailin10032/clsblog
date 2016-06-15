@@ -16,5 +16,5 @@ def send_email(to, subject, template, **kwargs):
 
 
 def send_async_email(app, msg):
-    with app.cpp_context():
+    with app.app_context():
         mail.send(msg)
