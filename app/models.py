@@ -56,6 +56,7 @@ class User(db.Model, UserMixin):
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        self.follow(self)
 
     followed = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'),
                                lazy='dynamic', cascade='all, delete-orphan')
@@ -74,13 +75,11 @@ class User(db.Model, UserMixin):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
             db.session.add(f)
-            db.session.commit()
 
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
-            db.session.commit()
 
     def is_following(self, user):
         return self.followed.filter_by(followed_id=user.id).first() is not None
