@@ -92,6 +92,7 @@ def change_password():
             current_user.verify_password(form.old_password.data):
         current_user.password = form.new_password.data
         db.session.add(current_user)
+        db.session.commit()
         flash('You have changed your password successfully')
         redirect(url_for('main.index'))
     return render_template('auth/change_password.html', form=form)
@@ -105,6 +106,7 @@ def change_email():
         current_user.email = form.new_email.data
         current_user.avatar_hash = hashlib.md5(current_user.email.endode('utf-8')).hexdigest()
         db.session.add(current_user)
+        db.session.commit()
         flash('You have changed your email successfully.')
         redirect(url_for('main.index'))
     return render_template('auth/change_email.html', form=form)

@@ -6,7 +6,6 @@ from flask import current_app, request
 from . import login_manager
 from datetime import datetime
 import hashlib
-import pdb
 from markdown import markdown
 import bleach
 
@@ -50,7 +49,6 @@ class User(db.Model, UserMixin):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        self.follow(self)
         if self.role is None:
             if self.email == current_app.config['FLASKY_ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
@@ -76,17 +74,19 @@ class User(db.Model, UserMixin):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
             db.session.add(f)
+            db.session.commit()
 
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
+            db.session.commit()
 
     def is_following(self, user):
         return self.followed.filter_by(followed_id=user.id).first() is not None
 
     def is_followed_by(self, user):
-        return self.followers.filter_by(follower_id=user.id) is not None
+        return self.followers.filter_by(follower_id=user.id).first() is not None
 
     @property
     def followed_posts(self):
@@ -123,6 +123,7 @@ class User(db.Model, UserMixin):
             return False
         self.confirmed = True
         db.session.add(self)
+        db.session.commit()
         return True
 
     def can(self, permissions):
@@ -135,6 +136,7 @@ class User(db.Model, UserMixin):
     def ping(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
+        db.session.commit()
 
     def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
