@@ -39,6 +39,9 @@ class ProductionConfig(Config):
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = os.environ.get('MAIL_PORT')
+    FLASKY_MAIL_SENDER = os.environ.get('FLASKY_MAIL_SENDER')
 
     @classmethod
     def init_app(cls, app):
