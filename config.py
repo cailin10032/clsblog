@@ -6,13 +6,13 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <cailin_hubei@126.com>'
+    FLASKY_MAIL_SENDER = 'Flasky Admin <cailinunix@gmail.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     FLASKY_POSTS_PER_PAGE = 10
     FLASKY_FOLLOWERS_PER_PAGE = 10
     SSL_DISABLE = True
-    MAIL_SERVER = 'smtp.126.com'
-    MAIL_PORT = 25
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
     MAIL_USE_TLS = True
 
     @staticmethod
@@ -21,7 +21,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-
+    FLASKY_MAIL_SENDER = 'Flasky Admin <cailinunix@gmail.com>'
     DEBUG = True
     MAIL_SERVER = 'smtp.126.com'
     MAIL_PORT = 25
