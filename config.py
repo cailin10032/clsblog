@@ -6,14 +6,10 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <cailinunix@gmail.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     FLASKY_POSTS_PER_PAGE = 10
     FLASKY_FOLLOWERS_PER_PAGE = 10
     SSL_DISABLE = True
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 465
-    MAIL_USE_TLS = True
 
     @staticmethod
     def init_app(app):
@@ -21,7 +17,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    FLASKY_MAIL_SENDER = 'Flasky Admin <cailinunix@gmail.com>'
+    FLASKY_MAIL_SENDER = 'Flasky Admin <cailin_hubei@126.com>'
     DEBUG = True
     MAIL_SERVER = 'smtp.126.com'
     MAIL_PORT = 25
@@ -69,9 +65,13 @@ class ProductionConfig(Config):
 
 
 class HerokuConfig(ProductionConfig):
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = os.environ.get('MAIL_PORT')
+    MAIL_USE_TLS = True
     SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    FLASKY_MAIL_SENDER = os.environ.get('FLASKY_MAIL_SENDER')
 
     @classmethod
     def init_app(cls, app):
