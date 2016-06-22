@@ -43,8 +43,6 @@ class User(db.Model, UserMixin):
 
     avatar_hash = db.Column(db.String(32))
 
-    qiniu_hash = db.Column(db.String(32))
-
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
