@@ -101,6 +101,16 @@ class User(db.Model, UserMixin):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    @staticmethod
+    def verify_login(email, psw):
+        try:
+            user = User.query.filter_by(email=email).first()
+        except:
+            return None
+        if user is not None and user.verify_password(psw):
+            return user
+        return None
+
     def __repr__(self):
         return '<User %r %r>' % (self.username, self.id)
 
@@ -122,6 +132,20 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         db.session.commit()
         return True
+
+    def generate_auth_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        else:
+            return User.query.get(id=data.get('id'))
 
     def can(self, permissions):
         return self.role is not None and \

@@ -17,7 +17,7 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    FLASKY_MAIL_SENDER = 'Flasky Admin <cailin_hubei@126.com>'
+    FLASKY_MAIL_SENDER = 'clsblog Admin <cailin_hubei@126.com>'
     DEBUG = True
     MAIL_SERVER = 'smtp.126.com'
     MAIL_PORT = 25
