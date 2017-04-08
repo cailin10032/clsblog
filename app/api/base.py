@@ -2,14 +2,11 @@ from flask.ext import restful
 from flask import Blueprint
 import functools
 from flask import jsonify
-
-
-api_blueprint = Blueprint('api', __name__)
-api = restful.Api(api_blueprint)
+from . import api
 
 class ResourceRegister(object):
-    def __init__(self, api):
-        self.api = api
+    def __init__(self, api_blueprint):
+        self.api = restful.Api(api_blueprint)
 
     def register_resource(self, path=None):
         def decorator(cls):

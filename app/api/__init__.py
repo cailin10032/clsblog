@@ -1,2 +1,5 @@
-from base import api_blueprint
-from auth_token import *
+from flask import Blueprint
+
+api = Blueprint('api', __name__)
+
+from test import TestResource
