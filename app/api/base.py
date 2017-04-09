@@ -1,10 +1,12 @@
 from flask.ext import restful
 from flask import Blueprint
+from flask import make_response
 import functools
 from flask import jsonify
 from . import api
+import json
 
-class ResourceRegister(object):
+class ApiManager(object):
     def __init__(self, api_blueprint):
         self.api = restful.Api(api_blueprint)
 
@@ -14,7 +16,19 @@ class ResourceRegister(object):
             return cls
         return decorator
 
-register = ResourceRegister(api)
+    def register_output(self, *args, **kwargs):
+        def decorator(fn):
+            self.api.representation(*args, **kwargs)(fn)
+            return fn
+        return decorator
+
+register = ApiManager(api)
+
+@register.register_output('application/json')
+def output_json(data, code=200, headers=None):
+    resp = make_response(json.dumps(data), code)
+    resp.headers.extend(headers or {})
+    return resp
 
 
 class BaseResource(restful.Resource):

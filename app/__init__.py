@@ -1,18 +1,19 @@
 from flask import Flask
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.mail import Mail
-from flask.ext.moment import Moment
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
+from flask_mail import Mail
+from flask_moment import Moment
+from flask_sqlalchemy import SQLAlchemy
 from config import config
-from flask.ext.login import LoginManager
-from flask.ext.pagedown import PageDown
-from flask.ext.restful import Api
+from flask_login import LoginManager
+from flask_pagedown import PageDown
+from flask_redis import FlaskRedis
 
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
 pagedown = PageDown()
+redis_store = FlaskRedis()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -29,6 +30,7 @@ def create_app(config_name):
     moment.init_app(app)
     db.init_app(app)
     pagedown.init_app(app)
+    redis_store.init_app(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -36,7 +38,7 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-    from .api import api_blueprint
+    from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/')
 
     login_manager.init_app(app)

@@ -1,8 +1,7 @@
 from functools import wraps
-from flask import abort
+from flask import abort, request
 from flask.ext.login import current_user
 from .models import Permission
-
 
 def permission_required(permission):
     def decorator(f):
